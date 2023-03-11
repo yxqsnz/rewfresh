@@ -7,6 +7,7 @@ use crate::{data::Data, lesson::lesson};
 
 mod data;
 mod lesson;
+mod utils;
 
 fn get_player_data_location() -> PathBuf {
     let home = env::var("HOME")
@@ -30,8 +31,8 @@ fn create_player_profile() -> Result<Data> {
 
 fn main() -> Result<()> {
     let player_data_location = get_player_data_location().into_boxed_path();
-    println!("{}", "Welcome to Rewfresh.".purple());
-    println!("{}", "Loading player information ...".cyan());
+    put!("Welcome to Rewfresh.".purple());
+    put!("Loading player information ...".cyan());
 
     let mut player_data = if player_data_location.exists() {
         Data::load_from_file(&player_data_location)?
