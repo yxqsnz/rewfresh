@@ -11,13 +11,13 @@ macro_rules! put {
     };
 }
 
-pub static WORDS: &'static str = include_str!("../assets/wordlist.txt");
+pub static WORDS: &str = include_str!("../assets/wordlist.txt");
 
 pub fn choose_word() -> String {
-    let words: Vec<_> = WORDS.split::<&str>("\n").collect();
+    let words: Vec<_> = WORDS.split('\n').collect();
 
     let mut rng = thread_rng();
-    words.choose(&mut rng).unwrap().to_string()
+    (*words.choose(&mut rng).unwrap()).to_string()
 }
 
 pub fn random_words(word_count: u8) -> Vec<String> {
@@ -48,7 +48,7 @@ pub struct WordCompletion {
 impl Default for WordCompletion {
     fn default() -> Self {
         Self {
-            words: WORDS.split::<&str>("\n").map(|x| x.to_string()).collect(),
+            words: WORDS.split('\n').map(ToString::to_string).collect(),
         }
     }
 }
@@ -56,7 +56,7 @@ impl Default for WordCompletion {
 impl Completion for WordCompletion {
     fn get(&self, input: &str) -> Option<String> {
         let mut words = self.words.clone();
-        words.sort_by_key(|x| x.len());
+        words.sort_by_key(String::len);
         words.sort_by_cached_key(|x| levenshtein(x, input));
         words.first().map(ToOwned::to_owned)
     }

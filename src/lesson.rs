@@ -63,8 +63,8 @@ pub fn lesson(data: &mut Data) -> Result<()> {
 
             for word in user_words {
                 for b_word in &words {
-                    let diff = diff_percent(word, &b_word);
-                    if diff >= 80 && diff < 100 {
+                    let diff = diff_percent(word, b_word);
+                    if (80..100).contains(&diff) {
                         un_words.push((word.to_string(), b_word.to_string()));
                     } else if diff == 100 {
                         correct_words.push(word.to_string());
@@ -111,7 +111,7 @@ pub fn lesson(data: &mut Data) -> Result<()> {
     }
 
     let gain_xp = ((raw_fmt_words.len() * words.len() % 100) as i64
-        + (get_word_amount(&data) as i64) / tries)
+        + i64::from(get_word_amount(data)) / tries)
         - started.elapsed().as_secs() as i64
         - tries;
 
